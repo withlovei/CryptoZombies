@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h4 class="modal-title">Transfer to new Address</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form name="editForm" role="form" novalidate (ngSubmit)="transfer()" [formGroup]="editForm">
+
+  <div class="modal-body">
+      <div class="form-group">
+        <label for="newName">New ETH address</label>
+        <div class="input-group">
+          <input id="newName" class="form-control" required formControlName="newName">
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="transfer()">Transfer</button>
+  </div>
+</form>
