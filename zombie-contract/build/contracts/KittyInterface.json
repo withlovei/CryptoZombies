@@ -74,7 +74,7 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.5.0 <0.6.0;\r\n\r\nimport \"./ZombieFactory.sol\";\r\n\r\ncontract KittyInterface {\r\n    function getKitty(uint256 _id) external view returns (\r\n        bool isGestating,\r\n        bool isReady,\r\n        uint256 cooldownIndex,\r\n        uint256 nextActionAt,\r\n        uint256 siringWithId,\r\n        uint256 birthTime,\r\n        uint256 matronId,\r\n        uint256 sireId,\r\n        uint256 generation,\r\n        uint256 genes\r\n    );\r\n}\r\n\r\ncontract ZombieFeeding is ZombieFactory {\r\n\r\n    KittyInterface kittyContract;\r\n\r\n    modifier onlyOwnerOf(uint _zombieId) {\r\n        require(msg.sender == zombieToOwner[_zombieId]);\r\n        _;\r\n    }\r\n\r\n    function setKittyContractAddress(address _address) external onlyOwner {\r\n        kittyContract = KittyInterface(_address);\r\n    }\r\n\r\n    function _triggerCooldown(Zombie storage _zombie) internal {\r\n        _zombie.readyTime = uint32(now + cooldownTime);\r\n    }\r\n\r\n    function _isReady(Zombie storage _zombie) internal view returns (bool) {\r\n        return (_zombie.readyTime <= now);\r\n    }\r\n\r\n    function feedAndMultiply(uint _zombieId, uint _targetDna, string memory _species) internal onlyOwnerOf(_zombieId) {\r\n        Zombie storage myZombie = zombies[_zombieId];\r\n        require(_isReady(myZombie));\r\n        _targetDna = _targetDna % dnaModulus;\r\n        uint newDna = (myZombie.dna + _targetDna) / 2;\r\n        if (keccak256(abi.encodePacked(_species)) == keccak256(abi.encodePacked(\"kitty\"))) {\r\n            newDna = newDna - newDna % 100 + 99;\r\n        }\r\n        _createZombie(\"NoName\", newDna);\r\n        _triggerCooldown(myZombie);\r\n    }\r\n\r\n    function feedOnKitty(uint _zombieId, uint _kittyId) public {\r\n        uint kittyDna;\r\n        (,,,,,,,,,kittyDna) = kittyContract.getKitty(_kittyId);\r\n        feedAndMultiply(_zombieId, kittyDna, \"kitty\");\r\n    }\r\n}\r\n",
-  "sourcePath": "H:\\workspace\\1.project\\book-sol\\bookstore\\contracts\\ZombieFeeding.sol",
+  "sourcePath": "H:\\workspace\\1.project\\book-sol\\zombie-contract\\contracts\\ZombieFeeding.sol",
   "ast": {
     "absolutePath": "project:/contracts/ZombieFeeding.sol",
     "exportedSymbols": {
@@ -5401,7 +5401,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-08-25T11:11:06.719Z",
+  "updatedAt": "2021-08-30T16:21:38.503Z",
   "devdoc": {
     "methods": {}
   },

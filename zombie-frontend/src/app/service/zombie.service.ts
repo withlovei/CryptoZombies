@@ -6,8 +6,6 @@ const Web3 = require('web3');
 declare let require: any;
 declare let window: any;
 const tokenAbi = require('../../contracts/ZombieOwnership.json');
-// const zombieAbi = fs.readFileSync('../../contracts/ZombieOwnership.json', 'utf8');
-// const abi = JSON.parse(tokenAbi);
 @Injectable({
   providedIn: 'root'
 })
@@ -22,8 +20,6 @@ export class ZombieService {
 
 
   constructor() {
-    console.log(tokenAbi);
-    // console.log(abi);
     if (window.ethereum === undefined) {
       alert('Non-Ethereum browser detected. Install MetaMask');
     } else {
@@ -59,61 +55,33 @@ export class ZombieService {
   createRandomZombie(name) : Promise<any>{
     // This is going to take a while, so update the UI to let the user know
     // the transaction has been sent
-    // $("#txStatus").text("Creating new zombie on the blockchain. This may take a while...");
     // Send the tx to our contract:
     console.log("create zombie form: " + this.userAccount);
     return this.cryptoZombies.methods.createRandomZombie(name)
       .send({ from: this.userAccount })
       .on("receipt", function(receipt) {
         console.log(receipt);
-        // $("#txStatus").text("Successfully created " + name + "!");
         // Transaction was accepted into the blockchain, let's redraw the UI
-        // getZombiesByOwner(userAccount).then(displayZombies);
         return Promise.resolve(receipt);
 
       })
       .on("error", function(error) {
         // Do something to alert the user their transaction has failed
-        // $("#txStatus").text(error);
         return Promise.resolve(error);
       });
   }
 
-  // feedOnKitty(zombieId, kittyId) {
-  //   // $("#txStatus").text("Eating a kitty. This may take a while...");
-  //   return this.cryptoZombies.methods.feedOnKitty(zombieId, kittyId)
-  //     .send({ from: this.userAccount })
-  //     .on("receipt", function(receipt) {
-  //       // $("#txStatus").text("Ate a kitty and spawned a new Zombie!");
-  //       this.getZombiesByOwner(this.userAccount).then(displayZombies);
-  //     })
-  //     .on("error", function(error) {
-  //       // $("#txStatus").text(error);
-  //     });
-  // }
-
-  // function levelUp(zombieId) {
-  //   // $("#txStatus").text("Leveling up your zombie...");
-  //   return this.cryptoZombies.methods.levelUp(zombieId)
-  //     .send({ from: this.userAccount, value: this.web3.utils.toWei("0.001", "ether") })
-  //     .on("receipt", function(receipt) {
-  //       // $("#txStatus").text("Power overwhelming! Zombie successfully leveled up");
-  //     })
-  //     .on("error", function(error) {
-  //       // $("#txStatus").text(error);
-  //     });
-  // }
 
   getZombieDetails(id) {
-    return this.cryptoZombies.methods.zombies(id).call()
+    return this.cryptoZombies.methods.zombies(id).call();
   }
 
   zombieToOwner(id) {
-    return this.cryptoZombies.methods.zombieToOwner(id).call()
+    return this.cryptoZombies.methods.zombieToOwner(id).call();
   }
 
   public getZombiesByOwner(owner: any) {
-    return this.cryptoZombies.methods.getZombiesByOwner(owner).call()
+    return this.cryptoZombies.methods.getZombiesByOwner(owner).call();
   }
 
   private async enableMetaMaskAccount(): Promise<any> {
@@ -126,7 +94,6 @@ export class ZombieService {
 
   private async getAccount(): Promise<any> {
     console.log('transfer.service :: getAccount :: start');
-    // if (this.account == null) {
       this.account = await new Promise((resolve, reject) => {
         console.log('transfer.service :: getAccount :: eth');
         console.log(window.web3.eth);
@@ -147,7 +114,6 @@ export class ZombieService {
           }
         });
       }) as Promise<any>;
-    // }
     return Promise.resolve(this.account);
   }
 
@@ -181,15 +147,10 @@ export class ZombieService {
     value: CONST.WEI_UPLEVEL})
       .on("receipt", function(receipt) {
         console.log(receipt);
-        // $("#txStatus").text("Successfully created " + name + "!");
-        // Transaction was accepted into the blockchain, let's redraw the UI
-        // getZombiesByOwner(userAccount).then(displayZombies);
         return Promise.resolve(receipt);
 
       })
       .on("error", function(error) {
-        // Do something to alert the user their transaction has failed
-        // $("#txStatus").text(error);
         return Promise.resolve(error);
       });
   }
@@ -200,15 +161,10 @@ export class ZombieService {
       value: CONST.WEI_CHANGE_NAME})
       .on("receipt", function(receipt) {
         console.log(receipt);
-        // $("#txStatus").text("Successfully created " + name + "!");
-        // Transaction was accepted into the blockchain, let's redraw the UI
-        // getZombiesByOwner(userAccount).then(displayZombies);
         return Promise.resolve(receipt);
 
       })
       .on("error", function(error) {
-        // Do something to alert the user their transaction has failed
-        // $("#txStatus").text(error);
         return Promise.resolve(error);
       });
   }
